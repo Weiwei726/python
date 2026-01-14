@@ -1,0 +1,27 @@
+name: Discord Auto Push
+on:
+  schedule:
+    #0 0 代表UTC時間00:00，也就是台灣時間 08:00
+    - cron: '0 0 * * *'
+  workflow_dispatch: #可以隨時點按鈕手動測試執行
+jobs:
+  run-python:
+    runs-on: ubuntu-latest
+    steps:
+    - name: 檢出程式碼
+      uses: actions/checkout@v4
+    - name: 設定 Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+    - name: 安裝必要套件
+      run: |
+        python -m pip install --upgrade pip
+        # 根據你的程式需求安裝套件，例如 discord.py 或 requests
+        pip install discord.py requests 
+    - name: 執行預警推播程式
+      run: python "預警訊息推播.py"
+      env:
+        PYTHONIOENCODING: utf-8
+        # 如果你有設定 Secret，要在這裡讀取
+        # DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
